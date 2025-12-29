@@ -1,0 +1,68 @@
+# 服务器配置
+server:
+  port: 9090  # 服务器端口
+  maxHttpHeaderSize: 8192  # HTTP请求头最大大小（字节）
+  servlet:
+    context-path: /api  # 应用上下文路径
+
+# Spring框架配置
+spring:
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL驱动类名
+    url: jdbc:mysql://localhost:3306/winter_im?characterEncoding=utf8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai  # 数据库连接URL
+    username: root  # 数据库用户名
+    password: 829829  # 数据库密码
+    hikari:  # HikariCP连接池配置
+      auto-commit: true  # 自动提交事务
+      connection-test-query: SELECT 1  # 用于测试连接的SQL查询
+      maximum-pool-size: 20  # 连接池最大连接数，默认和minimum-idle相等，连接越多对性能影响越大
+      minimum-idle: 5  # 连接池最小空闲连接，默认值与maximum-pool-size相等
+      connection-timeout: 30000  # 连接超时时间（毫秒）
+      idle-timeout: 30000  # 空闲连接存活最大时间（毫秒），idle-timeout要小于max-lifetime
+      max-lifetime: 120000  # 池中连接最长生命周期（毫秒），默认为1800000，如果不等于0且小于30秒则会被重置回30分钟。强烈建议设置这个参数
+
+
+# MyBatis-Plus配置
+mybatis-plus:
+  configuration:
+    # 开启驼峰命名映射
+    map-underscore-to-camel-case: true
+
+
+
+
+  # Jackson JSON处理配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss  # 日期格式
+    joda-date-time-format: yyyy-MM-dd HH:mm:ss  # Joda时间格式
+    time-zone: GMT+8  # 时区设置
+
+  # Servlet配置
+  servlet:
+    multipart:  # 文件上传配置
+      max-file-size: 101MB  # 单个文件最大大小
+      max-request-size: 101MB  # 整个请求最大大小
+
+  # MVC配置
+  mvc:
+    servlet:
+      load-on-startup: 1  # Servlet启动时加载顺序
+    # 找不到页面直接抛出异常
+    throw-exception-if-no-handler-found: true
+
+  # 资源配置
+  # 不要为我们工程中的资源文件建立映射
+  resources:
+    add-mappings: false  # 禁用静态资源映射
+
+# 日志配置
+log:
+  level:
+    root: info  # 根日志级别
+    sql: debug  # SQL日志级别
+    my: debug  # 自定义日志级别
+  file: logs  # 日志文件存储目录
+  maxsize: 2MB  # 单个日志文件最大大小
+
+# 项目自定义配置

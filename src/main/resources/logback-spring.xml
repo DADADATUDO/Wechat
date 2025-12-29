@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Logback日志框架配置文件 -->
+<configuration>
+    <!-- 从Spring Boot application.yml中读取日志配置参数 -->
+    <springProperty name="logFile" source="log.file" />  <!-- 日志文件目录 -->
+    <springProperty name="rootlevel" source="log.level.root" />  <!-- 根日志级别 -->
+    <springProperty name="mylevel" source="log.level.my" />  <!-- 自定义日志级别 -->
+    <springProperty name="sqllevel" source="log.level.sql" />  <!-- SQL日志级别 -->
+    <springProperty name="maxFileSize" source="log.maxsize" />  <!-- 最大文件大小 -->
+
+    <!-- 输出到控制台的日志策略 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 控制台日志输出格式: 日期 [线程] 日志级别 日志器名称 [文件:行号] 日志消息 换行 -->
+            <pattern>%d [%thread] %-5level %logger{50} -[%file:%line]- %msg%n</pattern>
+            <charset>UTF-8</charset>  <!-- 日志字符编码 -->
+        </encoder>
+    </appender>
+    
+    <!-- 输出到日志文件的策略，使用滚动文件追加器 -->
+    <appender name="sysLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- 文件日志输出格式: 日期 [线程] 日志级别 [文件:行号] 日志消息 换行 -->
+            <pattern>%d [%thread] %-5level -[%file:%line]- %msg%n</pattern>
+            <charset>UTF-8</charset>  <!-- 日志字符编码 -->
+        </encoder>
+        <!-- 日志滚动策略，防止单个日志文件过大 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 日志文件路径模板: 项目根目录/日志目录/年月/日期/app_序号.log -->
+            <fileNamePattern>${user.dir}/${logFile}/%d{yyyyMM,aux}/%d{yyyyMMdd}/app_%i.log</fileNamePattern>
+            <!-- 单个日志文件最大大小 -->
+            <maxFileSize>${maxFileSize}</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <!-- SQL日志配置: 专门处理数据库相关日志 -->
+    <logger name="com.winter.app.mapper" level="${sqllevel}" additivity="false">
+        <!-- 不继承父logger的appender -->
+        <appender-ref ref="sysLog"/>  <!-- 输出到文件 -->
+        <appender-ref ref="STDOUT" />  <!-- 同时输出到控制台 -->
+    </logger>
+
+    <!-- 应用自定义日志配置: 处理项目中自定义的日志 -->
+    <logger name="com.winter" level="${mylevel}" additivity="false">
+        <!-- 不继承父logger的appender -->
+        <appender-ref ref="sysLog" />  <!-- 输出到文件 -->
+        <appender-ref ref="STDOUT" />  <!-- 同时输出到控制台 -->
+    </logger>
+
+    <!-- 根日志配置: 处理所有其他日志 -->
+    <root level="${rootlevel}">
+        <!-- 只输出到控制台，不输出到文件 -->
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
