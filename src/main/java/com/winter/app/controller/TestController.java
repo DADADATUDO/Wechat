@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @Slf4j
 public class TestController {
@@ -27,6 +30,7 @@ public class TestController {
         }
         
         log.info("测试热部署test - 用户信息: {}", imUser);
+        //return Response.fail("用户名错误");
         return Response.success(imUser);
     }
 }

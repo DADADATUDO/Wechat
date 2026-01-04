@@ -24,6 +24,8 @@ public class Response<T> {
     // 成功响应
     public static <T> Response<T> success(){return new Response<>(ResponseType.SUCCESS,null,null);}
     public static <T> Response<T> success(T data){return new Response<>(ResponseType.SUCCESS,null,data);}
+    public static <T> Response<T> success(String message,T data){return new Response<>(ResponseType.SUCCESS,message,data);}
+    public static <T> Response<T> success(String message){return new Response<>(ResponseType.SUCCESS,message,null);}
 
     // 失败响应
     public static <T> Response<T> fail(){return new Response<>(ResponseType.FAILED,null,null);}
