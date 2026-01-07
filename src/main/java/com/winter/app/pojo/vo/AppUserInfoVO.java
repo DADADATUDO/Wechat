@@ -1,9 +1,8 @@
-package com.winter.pojo.entity;
+package com.winter.app.pojo.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.winter.app.enums.UserStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -12,16 +11,10 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
-/**
- * 用户表
- * 对应数据库表：Im_user
- *  * 业务说明：存储系统用户的基础信息（账号、昵称、密码等）
- */
 @Data
-@TableName("im_user")
 @Accessors(chain = true)
-@Schema(description = "用户实体")
-public class ImUser {
+@Schema(description = "当用户实体可给前端的信息")
+public class AppUserInfoVO {
     @TableId(value = "id",type = IdType.AUTO)
     @Schema(description = "用户ID，自增主键")
     private Integer id;
@@ -29,15 +22,6 @@ public class ImUser {
     @Schema(description = "账号，登录时使用")
     @TableField(value = "user_name")
     private String username;
-
-    @ToString.Exclude
-    @Schema(description = "密码")
-    @TableField(value = "password")
-    private String password;
-
-    @Schema(description = "盐值")
-    @TableField(value = "salt")
-    private String salt;
 
     @Schema(description = "昵称，前端显示的名称")
     @TableField(value = "nickname")
@@ -67,21 +51,21 @@ public class ImUser {
     @TableField(value = "avatar")
     private String avatar;
 
-    @Schema(description = "手机号")
-    @TableField(value = "phone_number")
-    private String phoneNumber;
-
-    @Schema(description = "身份证号")
-    @TableField(value = "id_card")
-    private String idCard;
+//    @Schema(description = "手机号")
+//    @TableField(value = "phone_number")
+//    private String phoneNumber;
+//
+//    @Schema(description = "身份证号")
+//    @TableField(value = "id_card")
+//    private String idCard;
 
     @Schema(description = "状态")
     @TableField(value = "status")
     private UserStatus status;
 
-    @Schema(description = "地址")
-    @TableField(value = "address")
-    private String address;
+//    @Schema(description = "地址")
+//    @TableField(value = "address")
+//    private String address;
 
     @Schema(description = "创建时间")
     @TableField(value = "create_time")

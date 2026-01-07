@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 public class HashUtil {
         /**
      * 计算输入字符串的MD5哈希值
+     * 将password与salt拼接后进行MD5加密，生成用于数据库存储的密码哈希值
      *
      * @param input 需要计算MD5哈希值的输入字符串
      * @return 返回输入字符串的MD5哈希值（十六进制字符串格式），如果算法不可用则返回null

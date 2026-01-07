@@ -1,9 +1,0 @@
-2025-12-29 22:31:54,582 [restartedMain] INFO  -[StartupInfoLogger.java:50]- Starting RunApplication on Yoki with PID 66248 (D:\Code\Project\WeChat\server\target\classes started by Yoki in D:\Code\Project\WeChat\server)
-2025-12-29 22:31:54,586 [restartedMain] DEBUG -[StartupInfoLogger.java:53]- Running with Spring Boot v2.1.11.RELEASE, Spring v5.1.12.RELEASE
-2025-12-29 22:31:54,586 [restartedMain] INFO  -[SpringApplication.java:648]- No active profile set, falling back to default profiles: default
-2025-12-29 22:31:58,381 [restartedMain] INFO  -[StartupInfoLogger.java:59]- Started RunApplication in 4.366 seconds (JVM running for 5.694)
-2025-12-29 22:31:58,384 [restartedMain] INFO  -[RunApplication.java:16]- ----------------RunApplication start----------------
-2025-12-29 22:32:08,177 [http-nio-9090-exec-1] DEBUG -[BaseJdbcLogger.java:135]- ==>  Preparing: SELECT id,user_name,password,salt,full_name,sex,province,city,country,avatar,phone_number,id_card,status,address,create_time FROM Im_user WHERE (user_name = ?)
-2025-12-29 22:32:08,251 [http-nio-9090-exec-1] DEBUG -[BaseJdbcLogger.java:135]- ==> Parameters: winter(String)
-2025-12-29 22:32:08,307 [http-nio-9090-exec-1] DEBUG -[BaseJdbcLogger.java:135]- <==      Total: 1
-2025-12-29 22:32:08,311 [http-nio-9090-exec-1] INFO  -[TestController.java:29]- 测试热部署test - 用户信息: ImUser(Id=1, userName=winter, password=ae96f3ee7559a8ebfa368085aa8bcafb, salt=ad815f2, fullName=null, sex=0, province=null, city=null, country=null, avatar=/api/uploads/common/2025/4/21/680643fd99e70a7678aaaf19.png, phoneNumber=null, idCard=null, status=DEFAULT, address=null, createTime=2025-03-16T20:35:38)

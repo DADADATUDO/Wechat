@@ -4,31 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.winter.app.controller.AppUserController;
 import com.winter.app.mapper.ImUserMapper;
 import com.winter.app.pojo.form.AppUserRegistryForm;
-import com.winter.pojo.Response;
 import com.winter.pojo.entity.ImUser;
 import com.winter.utils.LoginUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * AppUserController测试类
  * 测试用户注册API的各种场景
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class AppUserControllerTest {
 
     private MockMvc mockMvc;
@@ -49,7 +40,7 @@ public class AppUserControllerTest {
     @InjectMocks
     private AppUserController appUserController;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         
@@ -102,7 +93,7 @@ public class AppUserControllerTest {
         // 模拟用户已存在
         ImUser existingUser = new ImUser();
         existingUser.setId(1);
-        existingUser.setUserName("existinguser");
+        existingUser.setUsername("existinguser");
         when(imUserMapper.selectOne(any())).thenReturn(existingUser);
 
         // 执行请求并验证结果

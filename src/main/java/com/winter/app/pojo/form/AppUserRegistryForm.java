@@ -1,31 +1,30 @@
 package com.winter.app.pojo.form;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Data
-@ApiModel(description = "用户注册表单")
+@Schema(description = "用户注册表单")
 public class AppUserRegistryForm {
 
     @NotEmpty(message = "账号不能为空")
-    @ApiModelProperty(value = "账号",required = true)
+    @Schema(description = "账号", requiredMode = Schema.RequiredMode.REQUIRED)
     @Size(min = 6,max = 16,message = "账号长度为6-16个字符")
     private String username;
 
     @Size(min = 6,max = 16,message = "密码长度为6-16个字符")
     @Pattern(regexp = "^[0-9a-zA-Z~!@#$%^&*()_+\\-=]+$", message = "密码必须是数字、字母、特殊字符~!@#$%^&*()_+-=.的组合")
     @NotEmpty(message = "密码不能为空")
-    @ApiModelProperty(value = "密码",required = true)
+    @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 
     @Size(max = 20,message = "昵称长度不能超过20个字符")
     @NotEmpty(message = "昵称不能为空")
-    @ApiModelProperty(value = "昵称",required = true)
+    @Schema(description = "昵称", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nickname;
 
     /**
@@ -56,5 +55,3 @@ public class AppUserRegistryForm {
         }
     }
 }
-
-

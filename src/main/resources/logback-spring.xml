@@ -1,55 +1,120 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!-- Logback日志框架配置文件 -->
-<configuration>
-    <!-- 从Spring Boot application.yml中读取日志配置参数 -->
-    <springProperty name="logFile" source="log.file" />  <!-- 日志文件目录 -->
-    <springProperty name="rootlevel" source="log.level.root" />  <!-- 根日志级别 -->
-    <springProperty name="mylevel" source="log.level.my" />  <!-- 自定义日志级别 -->
-    <springProperty name="sqllevel" source="log.level.sql" />  <!-- SQL日志级别 -->
-    <springProperty name="maxFileSize" source="log.maxsize" />  <!-- 最大文件大小 -->
+<!--
+    Logback Spring Boot 日志配置文件
+    用于定义应用程序的日志输出格式、滚动策略和日志级别
+-->
+<configuration debug="false">
+    <!--
+        定义自定义转换规则，用于控制台输出时的颜色和格式化
+        这些转换规则主要用于美化控制台日志输出
+    -->
+    <!-- 控制台颜色转换器，用于在控制台输出时为不同级别的日志添加颜色 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <!-- 异常堆栈信息空白代理转换器，用于格式化异常信息 -->
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <!-- 扩展的异常堆栈信息空白代理转换器，提供更详细的异常格式化 -->
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
 
-    <!-- 输出到控制台的日志策略 -->
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!--
+        从Spring Boot配置文件中读取属性值，如果未设置则使用默认值
+        这样可以使日志配置更加灵活，可以在不修改XML文件的情况下调整日志行为
+    -->
+    <!-- 日志文件存储路径，默认为项目根目录下的logs文件夹 -->
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.name" defaultValue="logs"/>
+    <!-- 根日志级别，默认为INFO -->
+    <springProperty scope="context" name="ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+    <!-- 自定义应用日志级别，默认为DEBUG -->
+    <springProperty scope="context" name="MY_LEVEL" source="logging.level.my" defaultValue="DEBUG"/>
+    <!-- SQL日志级别，默认为DEBUG，用于记录SQL语句 -->
+    <springProperty scope="context" name="SQL_LEVEL" source="logging.level.sql" defaultValue="DEBUG"/>
+    <!-- 单个日志文件最大大小，默认为10MB -->
+    <springProperty scope="context" name="MAX_FILE_SIZE" source="logging.logback.rolling-policy.max-file-size" defaultValue="10MB"/>
+
+    <!--
+        定义日志输出格式模板
+        使用变量定义便于统一管理和修改
+    -->
+    <!-- 控制台日志输出格式，包含颜色标记，便于在控制台中区分不同级别的日志 -->
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%thread]){magenta} %clr(%-5level) %clr(%logger{50}){cyan} - %msg%n"/>
+    <!-- 文件日志输出格式，不包含颜色标记，便于日志文件查看和分析 -->
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+
+    <!--
+        定义日志输出目标(Appender)
+        Appender负责将日志事件输出到目标位置，如控制台、文件、数据库等
+    -->
+    <!-- 控制台输出Appender，将日志输出到控制台 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!-- 控制台日志输出格式: 日期 [线程] 日志级别 日志器名称 [文件:行号] 日志消息 换行 -->
-            <pattern>%d [%thread] %-5level %logger{50} -[%file:%line]- %msg%n</pattern>
-            <charset>UTF-8</charset>  <!-- 日志字符编码 -->
+            <!-- 使用上面定义的控制台日志格式 -->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!-- 设置字符编码为UTF-8，避免中文乱码 -->
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
-    
-    <!-- 输出到日志文件的策略，使用滚动文件追加器 -->
-    <appender name="sysLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <!--
+        文件输出Appender，将日志输出到文件
+        使用滚动策略，当日志文件达到一定大小或时间时自动创建新文件
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <!-- 文件日志输出格式: 日期 [线程] 日志级别 [文件:行号] 日志消息 换行 -->
-            <pattern>%d [%thread] %-5level -[%file:%line]- %msg%n</pattern>
-            <charset>UTF-8</charset>  <!-- 日志字符编码 -->
+            <!-- 使用上面定义的文件日志格式 -->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <!-- 设置字符编码为UTF-8 -->
+            <charset>UTF-8</charset>
         </encoder>
-        <!-- 日志滚动策略，防止单个日志文件过大 -->
+        <!-- 基于大小和时间的滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- 日志文件路径模板: 项目根目录/日志目录/年月/日期/app_序号.log -->
-            <fileNamePattern>${user.dir}/${logFile}/%d{yyyyMM,aux}/%d{yyyyMMdd}/app_%i.log</fileNamePattern>
-            <!-- 单个日志文件最大大小 -->
-            <maxFileSize>${maxFileSize}</maxFileSize>
+            <!-- 文件命名模式：按年月创建文件夹，按日期和序号命名文件 -->
+            <fileNamePattern>${user.dir}/${LOG_PATH}/%d{yyyyMM}/app_%d{yyyyMMdd}_%i.log</fileNamePattern>
+            <!-- 单个文件最大大小 -->
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <!-- 保留历史日志文件的最大天数 -->
+            <maxHistory>30</maxHistory>
+            <!-- 所有日志文件总大小上限 -->
+            <totalSizeCap>2GB</totalSizeCap>
         </rollingPolicy>
     </appender>
 
-    <!-- SQL日志配置: 专门处理数据库相关日志 -->
-    <logger name="com.winter.app.mapper" level="${sqllevel}" additivity="false">
-        <!-- 不继承父logger的appender -->
-        <appender-ref ref="sysLog"/>  <!-- 输出到文件 -->
-        <appender-ref ref="STDOUT" />  <!-- 同时输出到控制台 -->
+    <!--
+        异步文件输出Appender
+        将日志事件放入队列，由后台线程异步写入文件，提高应用性能
+    -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢弃任何日志事件，即使是INFO级别以下的 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 队列大小，用于存放待写入的日志事件 -->
+        <queueSize>512</queueSize>
+        <!-- 引用实际的文件输出Appender -->
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <!--
+        定义特定包或类的日志级别和输出目标
+        可以针对不同的模块设置不同的日志级别和输出策略
+    -->
+    <!-- Mapper层日志配置，通常用于记录SQL语句 -->
+    <logger name="com.winter.app.mapper" level="${SQL_LEVEL}" additivity="false">
+        <!-- 输出到异步文件和控制台 -->
+        <appender-ref ref="ASYNC_FILE"/>
+        <appender-ref ref="CONSOLE" />
     </logger>
 
-    <!-- 应用自定义日志配置: 处理项目中自定义的日志 -->
-    <logger name="com.winter" level="${mylevel}" additivity="false">
-        <!-- 不继承父logger的appender -->
-        <appender-ref ref="sysLog" />  <!-- 输出到文件 -->
-        <appender-ref ref="STDOUT" />  <!-- 同时输出到控制台 -->
+    <!-- 应用程序日志配置 -->
+    <logger name="com.winter" level="${MY_LEVEL}" additivity="false">
+        <!-- 输出到异步文件和控制台 -->
+        <appender-ref ref="ASYNC_FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
-    <!-- 根日志配置: 处理所有其他日志 -->
-    <root level="${rootlevel}">
-        <!-- 只输出到控制台，不输出到文件 -->
-        <appender-ref ref="STDOUT" />
+    <!--
+        根日志记录器配置
+        处理所有未被特定logger捕获的日志事件
+    -->
+    <root level="${ROOT_LEVEL}">
+        <!-- 输出到控制台和异步文件 -->
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC_FILE" />
     </root>
+
 </configuration>

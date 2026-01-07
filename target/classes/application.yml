@@ -1,9 +1,9 @@
 # 服务器配置
 server:
   port: 9090  # 服务器端口
-  maxHttpHeaderSize: 8192  # HTTP请求头最大大小（字节）
   servlet:
     context-path: /api  # 应用上下文路径
+  max-http-request-header-size: 8KB
 
 # Spring框架配置
 spring:
@@ -22,25 +22,14 @@ spring:
       idle-timeout: 30000  # 空闲连接存活最大时间（毫秒），idle-timeout要小于max-lifetime
       max-lifetime: 120000  # 池中连接最长生命周期（毫秒），默认为1800000，如果不等于0且小于30秒则会被重置回30分钟。强烈建议设置这个参数
 
-
-# MyBatis-Plus配置
-mybatis-plus:
-  configuration:
-    # 开启驼峰命名映射
-    map-underscore-to-camel-case: true
-
-
-
-
   # Jackson JSON处理配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss  # 日期格式
-    joda-date-time-format: yyyy-MM-dd HH:mm:ss  # Joda时间格式
     time-zone: GMT+8  # 时区设置
 
   # Servlet配置
   servlet:
-    multipart:  # 文件上传配置
+    multipart: # 文件上传配置
       max-file-size: 101MB  # 单个文件最大大小
       max-request-size: 101MB  # 整个请求最大大小
 
@@ -51,18 +40,54 @@ mybatis-plus:
     # 找不到页面直接抛出异常
     throw-exception-if-no-handler-found: true
 
-  # 资源配置
-  # 不要为我们工程中的资源文件建立映射
-  resources:
-    add-mappings: false  # 禁用静态资源映射
+
+# MyBatis-Plus配置
+mybatis-plus:
+  configuration:
+    # 开启驼峰命名映射
+    map-underscore-to-camel-case: true
+
+
 
 # 日志配置
-log:
+logging:
   level:
     root: info  # 根日志级别
     sql: debug  # SQL日志级别
     my: debug  # 自定义日志级别
-  file: logs  # 日志文件存储目录
-  maxsize: 2MB  # 单个日志文件最大大小
+  file:
+    name: logs  # 日志文件路径
+  logback:
+    rolling-policy:
+      max-file-size: 2MB  # 单个日志文件最大大小
+
+encryption:
+  key: "nLfSadFxVbjeW2OJ"
 
 # 项目自定义配置
+winter:
+  # 登录验证码过期时间，单位ms
+  login-code-expire: 60000
+  # 是否开启万能验证码
+  login-code-flag: true
+  # 万能验证码
+  login-code: "0000"
+  # 登录token过期时间，单位ms
+  login-token-expire: 4320000000
+  # token签名秘钥
+  token-secret: ZY78C6Sd3v
+  # 公开路径（无需登录即可访问）
+  public-path:
+    - /error
+    - /app/code
+    - /uploads/**
+    - /app/login
+    - /app/user/registry
+    - /doc.html
+    - /swagger-ui/**
+    - /swagger-resources
+    - /swagger-resources/**
+    - /getVerify
+    - /webjars/**
+    - /v2/api-docs
+    - /testProperties
