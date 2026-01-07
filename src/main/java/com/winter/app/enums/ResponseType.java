@@ -10,7 +10,7 @@ public enum ResponseType {
     NOT_SUPPORTED("405","不支持的请求"),
     SERVER_ERROR("500", "未知的异常"),
     PARAMS_ERROR("400", "参数异常"),
-    UNAUTHORIZED("401", "访问未授权"),
+    UNAUTHORIZED("401", "访问未授权，请登录账号"),
     NOT_READABLE("400","无法读取请求体内容"),
     CONVERSATION_NOT_FOUND("CONVERSATION_NOT_FOUND", "会话不存在"),
     USER_OFFLINE("USER_OFFLINE", "用户离线"),

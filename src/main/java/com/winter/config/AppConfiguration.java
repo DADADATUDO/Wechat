@@ -6,7 +6,7 @@ import com.winter.utils.ReadConfigProperties;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
  *时机问题：拦截器的 postHandle 方法在控制器方法执行后、视图渲染前执行，但此时响应体可能已经写入
  */
 @Configuration
-public class AppConfiguration extends WebMvcConfigurationSupport {
+public class AppConfiguration implements WebMvcConfigurer {
 
     @Resource
     private AuthInterceptor authInterceptor;
@@ -29,7 +29,7 @@ public class AppConfiguration extends WebMvcConfigurationSupport {
     @Resource
     private LoggingInterceptor loggingInterceptor;
 
-    protected void addInterceptors(InterceptorRegistry registration){
+    public void addInterceptors(InterceptorRegistry registration){
         //1. 创建拦截器实例
         //别new，通过注入交给spring管理
         //AuthInterceptor authInterceptor = new AuthInterceptor();
